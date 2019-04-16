@@ -110,6 +110,7 @@ console.log(t) // ReferenceError : y is not defined
 ### 함수 호이스팅
 ### 전역변수
 
+
 ## 상수
 
 ## 데이터 구조 및 형
