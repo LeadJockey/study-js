@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <div id="root"></div>
+  <script src="./template-engine.js"></script>
+  <script>
+    (function (imports) {
+      'use strict';
+      var node = {
+        type: "div",
+        attr: { class: "comp_test" },
+        children: [
+          {
+            type: "strong",
+            attr: { class: "screen_out" },
+            text: "테스트 목록"
+          },
+          {
+            type: "ul",
+            attr: { class: "list_test" },
+            children: [
+              {
+                type: "li",
+                attr: { class: "item_test" },
+                text: "1"
+              },
+              {
+                type: "li",
+                attr: { class: "item_test" },
+                text: "2"
+              },
+              {
+                type: "li",
+                attr: { class: "item_test" },
+                text: "3"
+              }
+            ]
+          }
+        ]
+      };
+      var root = document.getElementById("root");
+      var template = new imports.Template();
+      template.add("comp_test", template.parse(node)).render(root, "comp_test");
+    })(window)
+  </script>
+</body>
+
+</html>
