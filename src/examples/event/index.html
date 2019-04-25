@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="wrap1">
+    <div id="wrap2">
+      <div id="wrap3">
+          <div id="root"></div>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      'use srtict';
+
+      // delay append element - for delegate testing
+      function render() {
+        var root = document.getElementById('root')
+        var ul = document.createElement('ul');
+        [1,2,3].forEach(function(el, idx){
+          var li = document.createElement('li')
+          var p = document.createElement('p')
+          var text = document.createTextNode('index'+idx)
+          p.appendChild(text)
+          li.appendChild(p)
+          ul.appendChild(li)
+        }) 
+        root.appendChild(ul)
+      }
+
+      // event handler
+      function onClick(e) {
+        console.log('onClick clicked');
+        console.log('this', this);
+        console.log('event', e);
+        console.log('e.target', e.target);
+        
+        
+        e.target.style.color = 'red'
+      }
+      
+      // test 1 
+
+      setTimeout(render,1000)
+      // not working - null : eventloop 의 이벤트 리스너를 등록하는 과정은 초기 html 이 랜딩될 때 진행
+      // document.querySelector('ul').addEventListener('click', onClick) 
+      
+
+      // test 2
+
+      function on(eventType, parant, child, handler){
+        var parant = document.querySelector(parant)
+        parant.addEventListener(eventType, function(e){
+          e.stopPropagation();
+          console.log('parant', this)
+          console.log('target', e.target)
+          if(e.target.matches(child)){
+            console.dir('found');
+            handler.call(e.target, e)
+          }
+        })
+      }
+
+      on('click', '#root', 'p', onClick)
+
+      // bubling test
+      var isCapturing = false // true : capturing , false : bubbling
+      document.querySelector('html').addEventListener('click', function(e){
+        console.log(`${this.tagName} clicked!! use ${isCapturing ? 'capturing' : 'bubbling'}`);
+      }, isCapturing)
+      document.querySelector('body').addEventListener('click', function(e){
+        console.log(`${this.tagName} clicked!! use ${isCapturing ? 'capturing' : 'bubbling'}`);
+      }, isCapturing)
+      document.querySelector('#wrap3').addEventListener('click', function(e){
+        console.log(`${this.id} clicked!! use ${isCapturing ? 'capturing' : 'bubbling'}`);
+      }, isCapturing)
+      document.querySelector('#wrap2').addEventListener('click', function(e){
+        console.log(`${this.id} clicked!! use ${isCapturing ? 'capturing' : 'bubbling'}`);
+      }, isCapturing)
+      document.querySelector('#wrap1').addEventListener('click', function(e){
+        console.log(`${this.id} clicked!! use ${isCapturing ? 'capturing' : 'bubbling'}`);
+      }, isCapturing)
+      document.querySelector('#root').addEventListener('click', function(e){
+        console.log(`${this.id} clicked!! use ${isCapturing ? 'capturing' : 'bubbling'}`);
+      }, isCapturing)
+     
+
+
+    })()
+  </script>
+</body>
+
+</html>
